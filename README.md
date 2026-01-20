@@ -10,7 +10,45 @@ Our codes are based on the codes for the paper > [On the Convergence of FedAvg o
 cd data/cifar10
 ```
 3. Running the `generate_cifar_iid.py` to obtain IID CIFAR-10 data
-4. Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain a dirichlet distribution with $\alpha=0.1$ and $\alpha=0.5$, respectively.
+4. Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of CIFAR-10 with $\alpha=0.1$ and $\alpha=0.5$.
+
+```
+cd data/cifar100
+```
+Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of CIFAR-100 with $\alpha=0.1$ and $\alpha=0.5$.
+
+```
+cd data/tinyimagenet
+```
+## Tiny-ImageNet Dataset Preparation
+
+Due to repository size limitations, the Tiny-ImageNet dataset is not uploaded directly. You need to download and setup the dataset manually.
+
+### 1. Download and Setup
+1. Download **Tiny-ImageNet-200** (e.g., from [Stanford CS231n](http://cs231n.stanford.edu/tiny-imagenet-200.zip)).
+2. Navigate to `data/tinyimagenet/` inside this project.
+3. **Create a new folder named `data`** inside `tinyimagenet/` if it doesn't exist.
+4. Unzip the dataset into that nested `data` folder.
+
+**Correct Directory Structure:**
+Ensure your files are organized exactly as shown below. The scripts expect the dataset to be inside a nested `data` folder:
+
+```text
+fedavgpy-master/
+└── data/
+    └── tinyimagenet/
+        ├── generate_dirichlet_distribution_0.1_niid.py  <-- Scripts run from here
+        ├── generate_dirichlet_distribution_0.5_niid.py
+        └── data/                                        <-- Nested 'data' folder
+            └── tiny-imagenet-200/                       <-- Dataset goes here
+                ├── train/
+                ├── val/
+                ├── test/
+                ├── wnids.txt
+                └── words.txt
+```
+
+Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of Tiny-Imagenet with $\alpha=0.1$ and $\alpha=0.5$.
 
 ## Note
 In our experiment, the number of clients is M=10, and all clients participated in each aggregation process.
