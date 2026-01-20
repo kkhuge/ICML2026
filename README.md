@@ -9,15 +9,15 @@ Our codes are based on the codes for the paper > [On the Convergence of FedAvg o
 ```
 cd data/cifar10
 ```
-3. Running the `generate_cifar_iid.py` to obtain IID CIFAR-10 data
-4. Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of CIFAR-10 with $\alpha=0.1$ and $\alpha=0.5$.
+3. Run `generate_cifar_iid.py` to obtain IID CIFAR-10 data.
+4. Run the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of CIFAR-10 with $\alpha=0.1$ and $\alpha=0.5$.
 
 ## CIFAR-100 Dataset Preparation
 
 ```
 cd data/cifar100
 ```
-Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of CIFAR-100 with $\alpha=0.1$ and $\alpha=0.5$.
+Run `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of CIFAR-100 with $\alpha=0.1$ and $\alpha=0.5$.
 
 ```
 cd data/tinyimagenet
@@ -50,49 +50,45 @@ fedavgpy-master/
                 └── words.txt
 ```
 
-Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of Tiny-Imagenet with $\alpha=0.1$ and $\alpha=0.5$.
+Run `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of Tiny-Imagenet with $\alpha=0.1$ and $\alpha=0.5$.
 
-## Note
-In our experiment, the number of clients is M=10, and all clients participated in each aggregation process.
+## Model： ResNet-18
 
-If the next experiments using the SGD, you should set
+ The num_class in ```src/models/resnet.py``` is set to 10, 100, 200 for CIFAR-10, CIFAR-100, Tiny-ImageNet dataset.
 
-```
-cd src/models/client.py
-self.train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True) 
-self.test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=True)
-```
+ ## Table 1 and Figure 1
 
-If the next experiments using the GD, you should set
+ In this experiment, we do not use the Batch Normalization Adaptation skill and set ```model.eval()``` in Stage 2 of FedFRTH.
 
-```
-cd src/models/client.py
-self.train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=Flase) 
-self.test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=Flase)
-```
+ Run `main.py` using the `fedavg5` trainer for 550 `num_round` to evaluate FedAvg and our FedFRTH algorithm. You can switch between algorithms by modifying the conditional statement in the LrdWorker class (src/models/worker.py): use ```if round_i < 550:``` for FedAvg and ```if round_i < 450:``` for FedFRTH.
 
-Before running the code, it is necessary to manually set and save the results, for example：running the `main.py` using the `fedavg5` trainer with different networks to obtain figure 1, you must modify the name of the saved file to distinguish among different networks or widths
+ Run `main.py` using the `fedavg6` trainer for 550 `num_round` to evaluate FedProx and our FedFRTH algorithm. You can switch between algorithms by modifying the conditional statement in the ProxWorker class (src/models/worker.py): use ```if round_i < 550:``` for FedProx and ```if round_i < 450:``` for FedFRTH.
 
-```
-# train the family of fully connected network
-np.save(loss_dir + '/loss_test' + self.dataset + self.model + '_fc1', self.loss_list_test)
-np.save(acc_dir + '/acc_test' + self.dataset + self.model + '_fc1', self.acc_list_test)
-```
+ Run `main.py` using the `scaffold` trainer for 550 `num_round` to evaluate SCAFFOLD and our FedFRTH algorithm. You can switch between algorithms by modifying the conditional statement in the ScaffoldWorker class (src/models/worker.py): use ```if round_i < 550:``` for SCAFFOLD and ```if round_i < 450:``` for FedFRTH.
 
+ ## Figure 2
 
-## Impact of Non-IID Versus Network Width
+In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH.
 
-Running the `main.py` using the `fedavg5` trainer with different networks to obtain figure 1 and figure 2.
+Run `main.py` using the `feduv` trainer for 500 `num_round` to evaluate FedUV while using the `fedetf` trainer for 500 `num_round` to evaluate FedETF.
 
-Running the `main.py` using the `fedavg4` trainer with different networks to obtain the variation of global NTK and parameters in figure 3 and running the `main.py` using the `fedavg12` trainer with different networks to obtain the variation of local NTK in figure 3.
+## Figure 3
 
-## Linear Approximation of FedAvg
+In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH, TCT and CCVR.
 
-Running the `main.py` using the `fedavg9` trainer with the fully-connected networks to obtain figure 4.
+Run `main.py` using the `boontk` trainer with 1 `num_epoch` to evaluate TCT while using the `ccvr` trainer with 1 `num_epoch` to evaluate CCVR. For the TCT experiments (TCT_x), you must update `boontk.py` to align with the multiplier $x$. Specifically, initialize the linear head as `theta_global = torch.zeros(512*x, 200).cuda()` and set the `subsample_size` to $512*x$ in compute_eNTK function.
 
-## FedAvg Evolves as Centralized Learning
+## Figure 4
 
-Running the `main.py` using the `fedavg11` trainer with the fully-connected networks to obtain figure 6.
+In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH.
+
+Run `main.py` using the `fedavg5` trainer for 600 `num_round` to evaluate the impact of Stage 1 length. Adjust the conditional statement ```if round_i < a:``` inside ```src/models/worker.py``` (Class LrdWorker) to set the specific number of rounds for Stage 1 (e.g., a=50)
+
+## Figure 5
+
+In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH.
+
+Run `main.py` using the `fedavg5` trainer for 550 `num_round` to evaluate the impact of local epochs in Stage 2. Inside ```src/models/worker.py``` (Class LrdWorker), set the conditional statement to ```if round_i < 450:``` and change the Stage 2 loop  ```for i in range(self.num_epoch):``` to ```for i in range(1):``` to obtain the local epcho $\tau = 1$. Similarly, you can obtain the results for $\tau=5$ and $\tau=50$ by adjusting the range value accordingly.
 
 
 ## Dependency
