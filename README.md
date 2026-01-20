@@ -9,8 +9,8 @@ Our codes are based on the codes for the paper > [On the Convergence of FedAvg o
 ```
 cd data/cifar10
 ```
-3. Running the `generate_cifar_iid.py` to obtain IID CIFAR-10 data while running `generate_dirichlet_distribution_niid.py` to obtain non-IID CIFAR-10 data.
-4. Running the `generate_linear_regression_iid.py` to obtain IID mini-CIFAR-10 data while running `generate_linear_regression_niid.py` to obtain non-IID mini-CIFAR-10 data.
+3. Running the `generate_cifar_iid.py` to obtain IID CIFAR-10 data
+4. Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain a dirichlet distribution with $\alpha=0.1$ and $\alpha=0.5$, respectively.
 
 ## Note
 In our experiment, the number of clients is M=10, and all clients participated in each aggregation process.
