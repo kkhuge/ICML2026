@@ -1,16 +1,11 @@
-# Widening the Network Matigates the Impact of Data Heterogeneity on FedAvg
+# FedFRTH: Taming Heterogeneity with Fast Convergence and Enhanced Generalization
 
-This repository contains the codes of the paper [Widening the Network Matigates the Impact of Data Heterogeneity on FedAvg](https://arxiv.org/pdf/2508.12576) accepted by ICML2025.
+This repository contains the codes of the paper FedFRTH: Taming Heterogeneity with Fast Convergence and Enhanced Generalization
 
 Our codes are based on the codes for the paper > [On the Convergence of FedAvg on Non-IID Data](https://arxiv.org/pdf/1907.02189.pdf)
 
 ## Genarating the IID and non-IID data
 
-```
-cd data/mnist
-```
-1. Running the `generate_mnist_iid.py` to obtain IID MNIST data while running `generate_dirichlet_distribution_niid.py` to obtain non-IID MNIST data.
-2. Running the `generate_linear_regression_iid.py` to obtain IID mini-MNIST data while running `generate_linear_regression_niid.py` to obtain non-IID mini-MNIST data.
 ```
 cd data/cifar10
 ```
