@@ -93,14 +93,14 @@ Run `main.py` using the `fedavg5` trainer for 550 `num_round` to evaluate the im
 
 ## Dependency
 
-python = 3.8.18
+python = 3.10.19
 
-pytorch = 1.9.1
+pytorch = 2.9.0
 
-CUDA = 11.1
+CUDA = 13.0
 
-Tensordboardx = 2.6.2.2
+Tensordboardx = 2.6.4
 
-Numpy = 1.24.3
+Numpy = 2.1.2
 
 
