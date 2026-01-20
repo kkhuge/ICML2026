@@ -4,13 +4,15 @@ This repository contains the codes of the paper FedFRTH: Taming Heterogeneity wi
 
 Our codes are based on the codes for the paper > [On the Convergence of FedAvg on Non-IID Data](https://arxiv.org/pdf/1907.02189.pdf)
 
-## Genarating the IID and non-IID data
+## CIFAR-10 Dataset Preparation
 
 ```
 cd data/cifar10
 ```
 3. Running the `generate_cifar_iid.py` to obtain IID CIFAR-10 data
 4. Running the `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obtain Dirichlet-based partitions of CIFAR-10 with $\alpha=0.1$ and $\alpha=0.5$.
+
+## CIFAR-100 Dataset Preparation
 
 ```
 cd data/cifar100
