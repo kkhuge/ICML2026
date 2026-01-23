@@ -3,37 +3,26 @@ import numpy as np
 import pickle
 from tqdm import tqdm
 
-# 获取当前脚本所在目录
-cpath = os.path.dirname(os.path.abspath(__file__))
 
-# ---------------- 配置参数 ----------------
+cpath = os.path.dirname(os.path.abspath(__file__))
 NUM_USER = 100
 SAVE = True
-DATASET_ROOT = os.path.join(cpath, "data")  # 你的数据根目录
-alpha = 0.1  # Dirichlet 参数
-# ----------------------------------------
+DATASET_ROOT = os.path.join(cpath, "data") 
+alpha = 0.1
 
 np.random.seed(6)
 
 
 class PathDataset(object):
-    """
-    只存储路径和标签的简单包装类
-    """
 
     def __init__(self, image_paths, labels):
-        self.data = np.array(image_paths)  # 存路径 (String)
-        self.target = np.array(labels)  # 存标签 (Int)
+        self.data = np.array(image_paths) 
+        self.target = np.array(labels) 
 
     def __len__(self):
         return len(self.target)
 
-
-# -------------------------------------------------------------
-# 加载 Tiny-ImageNet (只读取路径，不读取图片)
-# -------------------------------------------------------------
 def load_tinyimagenet_paths(dataset_root):
-    # 尝试自动适配两种常见路径
     if os.path.exists(os.path.join(dataset_root, "tiny-imagenet-200")):
         real_root = os.path.join(dataset_root, "tiny-imagenet-200")
     else:
@@ -42,8 +31,6 @@ def load_tinyimagenet_paths(dataset_root):
     train_dir = os.path.join(real_root, "train")
     val_dir = os.path.join(real_root, "val")
     wnids_path = os.path.join(real_root, "wnids.txt")
-
-    # 1. 加载类别映射
     if not os.path.exists(wnids_path):
         raise FileNotFoundError(f"未找到 wnids.txt, 请检查路径: {wnids_path}")
 
@@ -196,3 +183,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
