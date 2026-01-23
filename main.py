@@ -107,8 +107,6 @@ def read_options():
     # if options['gpu']:
     #     torch.cuda.manual_seed_all(123 + options['seed'])
 
-    # ✅ -------------------------
-    # ✅ 强制设定所有随机种子 + 确定性 CUDA 算法
     seed = 42 + options['seed']
     np.random.seed(seed)
     random.seed(seed)
@@ -117,12 +115,10 @@ def read_options():
         torch.cuda.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
 
-    # ✅ 禁止 cudnn 自动优化，强制确定性算法
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    # ✅ 若 PyTorch >= 1.8，可启用完全确定性模式
     torch.use_deterministic_algorithms(True)
-    # ✅ -------------------------
+
 
     # read data
     idx = options['dataset'].find("_")
@@ -195,5 +191,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-#120+20
