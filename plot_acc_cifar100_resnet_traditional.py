@@ -1,24 +1,14 @@
 import numpy as np
-import pandas as pd
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-matplotlib.rcParams['text.usetex'] = True
-matplotlib.rc('font', size=12)
-
-
-tau = 5
-eta = 0.1
-R_0 = 2.14476
-width = 200
-eta_0 = eta * width
-lambda_min = 1
-D = 5420
-sigma = 3.5/D
+matplotlib.rcParams['text.usetex'] = True 
+matplotlib.rc('font', size=12) 
 
 
 
 def plot_learning(result_dir, ax, smooth=1, interval=1, **kwargs):
+    # 加载一维数据
     data = np.load(result_dir,allow_pickle=True)
     if smooth > 1:
         data = np.convolve(data, np.ones(smooth) / smooth, mode='valid')
@@ -26,17 +16,15 @@ def plot_learning(result_dir, ax, smooth=1, interval=1, **kwargs):
     episode = np.arange(len(data))[::interval]
     ax.plot(episode, mean, **kwargs)
 
-
 def compute_last50_stats(result_dir):
     data = np.load(result_dir, allow_pickle=True)
-
-    last10 = data[-10:]
-    mean_val = np.mean(last10)
-    std_val = np.std(last10)
+    last50 = data[-10:]
+    mean_val = np.mean(last50)
+    std_val = np.std(last50)
 
     print(f"File: {result_dir}")
-    print(f"Last 10 rounds mean: {mean_val:.6f}")
-    print(f"Last 10 rounds std: {std_val:.6f}")
+    print(f"Last 50 rounds mean: {mean_val:.6f}")
+    print(f"Last 50 rounds std: {std_val:.6f}")
     print("-" * 60)
 
 
@@ -48,7 +36,7 @@ fig, ax = plt.subplots(figsize=[5, 4])
 
 # #fedavg_0.1
 plot_learning('result_acc/fedavg4/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18_freeze.npy',
-              ax, label='FedFRTH', linestyle='-', color='tab:red')
+              ax, label='FedForth', linestyle='-', color='tab:red')
 plot_learning('result_acc/fedavg4/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18.npy',
               ax, label='FedAvg', linestyle='-', color='tab:green')
 compute_last50_stats('result_acc/fedavg4/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18_freeze.npy')
@@ -56,7 +44,7 @@ compute_last50_stats('result_acc/fedavg4/acc_testcifar100_all_data_1_dirichlet_n
 
 #fedavg_0.5
 plot_learning('result_acc/fedavg4/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18_freeze.npy',
-              ax, label='FedFRTH', linestyle='-', color='tab:red')
+              ax, label='FedForth', linestyle='-', color='tab:red')
 plot_learning('result_acc/fedavg4/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18.npy',
               ax, label='FedAvg', linestyle='-', color='tab:green')
 compute_last50_stats('result_acc/fedavg4/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18_freeze.npy')
@@ -64,7 +52,7 @@ compute_last50_stats('result_acc/fedavg4/acc_testcifar100_all_data_1_dirichlet_n
 
 #fedprox
 plot_learning('result_acc/fedavg6/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18_freeze.npy',
-              ax, label='FedFRTH', linestyle='-', color='tab:red')
+              ax, label='FedForth', linestyle='-', color='tab:red')
 plot_learning('result_acc/fedavg6/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18.npy',
               ax, label='FedProx', linestyle='-', color='tab:green')
 compute_last50_stats('result_acc/fedavg6/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18_freeze.npy')
@@ -72,7 +60,7 @@ compute_last50_stats('result_acc/fedavg6/acc_testcifar100_all_data_1_dirichlet_n
 
 #fedprox_0.5
 plot_learning('result_acc/fedavg6/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18_freeze.npy',
-              ax, label='FedFRTH', linestyle='-', color='tab:red')
+              ax, label='FedForth', linestyle='-', color='tab:red')
 plot_learning('result_acc/fedavg6/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18.npy',
               ax, label='FedProx', linestyle='-', color='tab:green')
 compute_last50_stats('result_acc/fedavg6/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18_freeze.npy')
@@ -80,7 +68,7 @@ compute_last50_stats('result_acc/fedavg6/acc_testcifar100_all_data_1_dirichlet_n
 
 #scaffold_0.1
 plot_learning('result_acc/scaffold/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18_freeze.npy',
-              ax, label='FedFRTH', linestyle='-', color='tab:red')
+              ax, label='FedForth', linestyle='-', color='tab:red')
 plot_learning('result_acc/scaffold/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18.npy',
               ax, label='Scaffold', linestyle='-', color='tab:green')
 compute_last50_stats('result_acc/scaffold/acc_testcifar100_all_data_1_dirichlet_niid_0.1resnet18_freeze.npy')
@@ -88,19 +76,13 @@ compute_last50_stats('result_acc/scaffold/acc_testcifar100_all_data_1_dirichlet_
 
 #scaffold_0.5
 plot_learning('result_acc/scaffold/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18_freeze.npy',
-              ax, label='FedFRTH', linestyle='-', color='tab:red')
+              ax, label='FedForth', linestyle='-', color='tab:red')
 plot_learning('result_acc/scaffold/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18.npy',
               ax, label='Scaffold', linestyle='-', color='tab:green')
 compute_last50_stats('result_acc/scaffold/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18_freeze.npy')
 compute_last50_stats('result_acc/scaffold/acc_testcifar100_all_data_1_dirichlet_niid_0.5resnet18.npy')
 
 
-
-
-
-
-
-# 其他设置
 ax.set_xlim([0, 100])
 ax.set_ylim([0, 0.7])
 ax.set_xticks(np.arange(0,120,20))
@@ -108,7 +90,7 @@ ax.set_yticks([0,0.1,0.2,0.3,0.4,0.5,0.51,0.53,0.55,0.57,0.59,0.6,0.7])
 ax.set_xlabel('Global Round')
 ax.set_ylabel('Test Accuracy')
 ax.get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
-ax.grid()
+ax.grid(True, linestyle='-', alpha=0.3)
 ax.legend(handlelength=2.3)
 fig.tight_layout()
 plt.show()
