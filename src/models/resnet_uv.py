@@ -27,13 +27,6 @@ class BasicBlock(nn.Module):
 
 
 class ResNet18_UV(nn.Module):
-    """
-    完全兼容 FedUV 的 ResNet18：
-    1. backbone -> avgpool -> flatten 得到 feature
-    2. feature -> projector（2 层 MLP）
-    3. projector 输出作为 encoder 表示（reps），供 hook 使用
-    4. readout(logits) 用于分类
-    """
     def __init__(self, num_classes=100, proj_dim=512):
         super(ResNet18_UV, self).__init__()
         self.in_planes = 64
@@ -49,12 +42,9 @@ class ResNet18_UV(nn.Module):
 
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
 
-        # ---------- Projector（论文要求） ----------
         self.projector = nn.Sequential(
             nn.Linear(512, proj_dim)
         )
-
-        # ---------- Readout（最终分类器） ----------
         self.readout = nn.Linear(proj_dim, num_classes)
 
     def _make_layer(self, block, planes, blocks, stride):
@@ -77,7 +67,6 @@ class ResNet18_UV(nn.Module):
         x = self.avgpool(x)
         x = torch.flatten(x, 1)       # [B, 512]
 
-        # encoder (FedUV 所需)
         reps = self.projector(x)      # [B, proj_dim]
 
         # classifier
@@ -88,3 +77,4 @@ class ResNet18_UV(nn.Module):
 
 def resnet18_uv(num_classes=100):
     return ResNet18_UV(num_classes)
+
