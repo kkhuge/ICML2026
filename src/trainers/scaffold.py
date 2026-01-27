@@ -125,12 +125,12 @@ class ScaffoldTrainer(BaseTrainer):
         averaged_solution /= accum_sample_num
 
         avg_delta_c = []
-        for params in zip(*delta_c):  # 每层 Δc 聚合
+        for params in zip(*delta_c):  
             stacked = torch.stack(params)
             avg_delta_c.append(stacked.mean(dim=0))
 
-        # ---- 3️⃣ 更新全局控制变量 ----
         self.global_c = [gc + self.clients_per_round / len(self.clients) * avg for gc, avg in zip(self.global_c, avg_delta_c)]
 
         return averaged_solution.detach(), self.global_c
+
 
