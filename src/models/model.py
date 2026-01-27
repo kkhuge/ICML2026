@@ -13,9 +13,9 @@ class Linear_Regression(nn.Module):
         self.fc3 = nn.Linear(k, out_dim)
         for m in self.modules():
             if isinstance(m, nn.Linear):
-                m.weight.data.normal_(0, np.sqrt(1.5 / k)) # 权重初始化为 N(0, 2/width)  100/4096
+                m.weight.data.normal_(0, np.sqrt(1.5 / k))
                 if m.bias is not None:
-                    m.bias.data.normal_(0, 0.1)  # 偏置初始化为 N(0, 0.1)
+                    m.bias.data.normal_(0, 0.1)
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
@@ -120,27 +120,22 @@ def choose_model(options):
     elif model_name == 'lenet':
         return LeNet(options['input_shape'], options['num_class'])
 
-    # ========= FedETF 专用模型 =========
+
     elif model_name.startswith('resnet18_etf'):
-        # FedETF 版本 ResNet18 单独放在一个文件
         mod = importlib.import_module('src.models.resnet_etf')
         resnet_model = getattr(mod, 'resnet18_etf')
         return resnet_model(options['num_class'])
 
-    # ========= FedUV 专用模型 =========
     elif model_name.startswith('resnet18_uv'):
-        # FedUV 版本 ResNet18 放在 resnet_uv.py
         mod = importlib.import_module('src.models.resnet_uv')
-        resnet_model = getattr(mod, 'resnet18_uv')  # 注意名称大小写一致
+        resnet_model = getattr(mod, 'resnet18_uv')
         return resnet_model(num_classes=options['num_class'])
 
     elif model_name.startswith('resnet50'):
-        # FedUV 版本 ResNet18 放在 resnet_uv.py
         mod = importlib.import_module('src.models.resnet_50')
-        resnet_model = getattr(mod, 'resnet50')  # 注意名称大小写一致
+        resnet_model = getattr(mod, 'resnet50')  
         return resnet_model(num_classes=options['num_class'])
 
-    # ========= 普通 ResNet 系列模型 =========
     elif model_name.startswith('resnet18'):
         mod = importlib.import_module('src.models.resnet')
         resnet_model = getattr(mod, model_name)
