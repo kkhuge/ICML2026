@@ -54,7 +54,7 @@ class BooNTKTrainer(BaseTrainer):
         self.tau = options['num_epoch']
         self.learning_rate = options['lr']
         self.optimizer = SGD(model.parameters(), lr=options['lr'], weight_decay=0.0001)
-        self.optimizer_last_layer = SGD(model.readout.parameters(), lr=options['lr'], weight_decay=0.001)
+        self.optimizer_last_layer = SGD(model.readout.parameters(), lr=options['lr'], weight_decay=0.0001)
         self.num_epoch = options['num_epoch']
         self.dataset = options["dataset"]
         self.loss_function = options["loss function"]
@@ -63,46 +63,45 @@ class BooNTKTrainer(BaseTrainer):
         super(BooNTKTrainer, self).__init__(options, dataset, another_dataset, worker=worker)
 
     def train(self):
-        # print('>>> Select {} clients per round \n'.format(self.clients_per_round))
-        # # Fetch latest flat model parameter
-        # self.latest_model = self.worker.get_flat_model_params().detach()
-        # for round_i in range(self.num_round):
-        #     if round_i<=450:
-        #         # Test latest model on train data
-        #         # _, accuracy, loss = self.test_latest_model_on_traindata(round_i)
-        #         # self.acc_list_train.append(accuracy)
-        #         # self.loss_list_train.append(loss)
-        #         loss_test, accuracy_test = self.test_latest_model_on_evaldata(round_i)
-        #         self.acc_list_test.append(accuracy_test)
-        #         self.loss_list_test.append(loss_test)
-        #
-        #         # Choose K clients prop to data size
-        #         selected_clients = self.select_clients(seed=round_i)
-        #
-        #         # Solve minimization locally
-        #         solns, stats = self.local_train(round_i, selected_clients)
-        #
-        #         # Track communication cost
-        #         self.metrics.extend_commu_stats(round_i, stats)
-        #
-        #         # Update latest model
-        #         self.latest_model = self.aggregate(solns)
-        #
-        #         self.worker.set_flat_model_params(self.latest_model)
-        #
-        #
-        # # Test final model on train data
-        # # _, accuracy, loss = self.test_latest_model_on_traindata(self.num_round)
-        # # self.acc_list_train.append(accuracy)
-        # # self.loss_list_train.append(loss)
-        # loss_test, accuracy_test = self.test_latest_model_on_evaldata(self.num_round)
-        # self.acc_list_test.append(accuracy_test)
-        # self.loss_list_test.append(loss_test)
-        # # ===== 保存第一阶段模型 =====
-        # torch.save(self.clients[0].worker.model.state_dict(), "stage1_resnet18_cifar10_0.1.pth")
+        print('>>> Select {} clients per round \n'.format(self.clients_per_round))
+        # Fetch latest flat model parameter
+        self.latest_model = self.worker.get_flat_model_params().detach()
+        for round_i in range(self.num_round):
+            if round_i<=450:
+                # Test latest model on train data
+                # _, accuracy, loss = self.test_latest_model_on_traindata(round_i)
+                # self.acc_list_train.append(accuracy)
+                # self.loss_list_train.append(loss)
+                loss_test, accuracy_test = self.test_latest_model_on_evaldata(round_i)
+                self.acc_list_test.append(accuracy_test)
+                self.loss_list_test.append(loss_test)
+        
+                # Choose K clients prop to data size
+                selected_clients = self.select_clients(seed=round_i)
+        
+                # Solve minimization locally
+                solns, stats = self.local_train(round_i, selected_clients)
+        
+                # Track communication cost
+                self.metrics.extend_commu_stats(round_i, stats)
+        
+                # Update latest model
+                self.latest_model = self.aggregate(solns)
+        
+                self.worker.set_flat_model_params(self.latest_model)
+        
+        
+        # Test final model on train data
+        # _, accuracy, loss = self.test_latest_model_on_traindata(self.num_round)
+        # self.acc_list_train.append(accuracy)
+        # self.loss_list_train.append(loss)
+        loss_test, accuracy_test = self.test_latest_model_on_evaldata(self.num_round)
+        self.acc_list_test.append(accuracy_test)
+        self.loss_list_test.append(loss_test)
+        torch.save(self.clients[0].worker.model.state_dict(), "stage1_resnet18_tinyimagenet_0.1.pth")
 
         print('===================== Start TCT Stage-2 =====================')
-        model_path = "stage1_resnet18_tinyimagenet_0.5.pth"
+        model_path = "stage1_resnet18_tinyimagenet_0.1.pth"
         self.worker.model.load_state_dict(torch.load(model_path))
         stage_1_model = self.worker.model
         stage_1_model.readout =  nn.Linear(512, 200).cuda()
@@ -115,7 +114,7 @@ class BooNTKTrainer(BaseTrainer):
             # Train NTK
             grad_i_train, target_i_train = self.client_compute_eNTK(stage_1_model, self.clients[i].train_dataloader)
 
-            # 将 batch-level NTK 全部移动到 CPU
+
             grad_i_train_cpu = [g.cpu() for g in grad_i_train]
             target_i_train_cpu = [t.cpu() for t in target_i_train]
 
@@ -141,7 +140,7 @@ class BooNTKTrainer(BaseTrainer):
         # grad_train_eval, target_train_eval = self.client_compute_eNTK_all(stage_1_model, self.centralized_train_dataloader)
         grad_test_eval, target_test_eval = self.client_compute_eNTK_all(stage_1_model, self.centralized_test_dataloader)
         # Init linear models
-        theta_global = torch.zeros(25600, 200).cuda()
+        theta_global = torch.zeros(512, 200).cuda()
         theta_global = torch.tensor(theta_global, requires_grad=False)
         client_thetas = [torch.zeros_like(theta_global).cuda() for _ in range(len(self.clients))]
         client_hi_s = [torch.zeros_like(theta_global).cuda() for _ in range(len(self.clients))]
@@ -159,7 +158,7 @@ class BooNTKTrainer(BaseTrainer):
                                                                       client_hi_s[selected_clients[i].cid],
                                                                       theta_global,
                                                                       M=1,
-                                                                      lr_local=0.01)
+                                                                      lr_local=0.1)
                 client_hi_s[selected_clients[i].cid] = h_i_client_update * 1.0
                 client_thetas[selected_clients[i].cid] = theta_hat_update * 1.0
                 theta_list.append(theta_hat_update)
@@ -201,8 +200,8 @@ class BooNTKTrainer(BaseTrainer):
         # np.save(loss_dir + '/loss_train' + self.dataset + self.model + '_freeze', self.loss_list_train)  #
         # np.save(acc_dir + '/acc_train' + self.dataset + self.model+ '_freeze', self.acc_list_train)
 
-        np.save(loss_dir + '/loss_test' + self.dataset + self.model + '_50_communication', self.loss_list_test)  #
-        np.save(acc_dir + '/acc_test' + self.dataset + self.model + '_50_communication', self.acc_list_test)
+        np.save(loss_dir + '/loss_test' + self.dataset + self.model + '_1_communication', self.loss_list_test)  #
+        np.save(acc_dir + '/acc_test' + self.dataset + self.model + '_1_communication', self.acc_list_test)
 
 
         # Save tracked information
@@ -235,7 +234,7 @@ class BooNTKTrainer(BaseTrainer):
             targets = targets.cuda()
             target_list.append(targets)
 
-        return grads_data_list, target_list  # 不返回 onehot！
+        return grads_data_list, target_list 
 
     def client_compute_eNTK_all(self, client_model, train_loader):
         """
@@ -275,14 +274,13 @@ class BooNTKTrainer(BaseTrainer):
 
         return grads_all, targets_all
 
-    def compute_eNTK(self, model, X, subsample_size=25600, seed=123):
+    def compute_eNTK(self, model, X, subsample_size=512, seed=123):
         """"compute eNTK"""
         model.eval()
         params = list(model.parameters())
         torch.manual_seed(seed)
         torch.cuda.manual_seed(seed)
 
-        # ====== 自动计算模型参数总维度（不会越界） ======
         param_dim = sum(p.numel() for p in params if p.requires_grad)
         subsample_size = min(subsample_size, param_dim)
 
@@ -293,8 +291,6 @@ class BooNTKTrainer(BaseTrainer):
         for i in tqdm(range(X.size()[0])):
 
             model.zero_grad()
-
-            # ====== ★ 统一强制 flatten，不分 CNN/MLP ======
             inp = X[i: i + 1]
 
             # ===== Only flatten MLP =====
@@ -305,7 +301,6 @@ class BooNTKTrainer(BaseTrainer):
             # ====== forward ======
             out = model(inp)
 
-            # ====== ★ scalar backward，不会报错 ======
             scalar = out.sum()
             scalar.backward()
 
@@ -355,4 +350,5 @@ class BooNTKTrainer(BaseTrainer):
                 theta_hat_local -= lr_local * (grad_theta )
 
         return theta_hat_local, h_i_client_update
+
 
