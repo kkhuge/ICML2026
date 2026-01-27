@@ -31,7 +31,7 @@ class ResNet18(nn.Module):
         super(ResNet18, self).__init__()
         self.in_planes = 64
 
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)  # CIFAR版本
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
 
         self.layer1 = self._make_layer(BasicBlock, 64, 2, stride=1)
@@ -63,3 +63,4 @@ class ResNet18(nn.Module):
 
 def resnet18(num_classes=200):
     return ResNet18(num_classes)
+
