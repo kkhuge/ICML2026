@@ -1,6 +1,6 @@
-# FedFRTH: Taming Heterogeneity with Fast Convergence and Enhanced Generalization
+# FedForth: Frozen Representation with Trainable Head for Linear Convergence and Provable Generalization in Non-IID Federated Learning
 
-This repository contains the codes of the paper FedFRTH: Taming Heterogeneity with Fast Convergence and Enhanced Generalization
+This repository contains the codes of the paper FedForth: Frozen Representation with Trainable Head for Linear Convergence and Provable Generalization in Non-IID Federated Learning
 
 Our codes are based on the codes for the paper > [On the Convergence of FedAvg on Non-IID Data](https://arxiv.org/pdf/1907.02189.pdf)
 
