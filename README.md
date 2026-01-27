@@ -76,7 +76,7 @@ Run `main.py` using the `feduv` trainer for 500 `num_round` with `resnet_uv` mod
 
 In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH, TCT and CCVR.
 
-Run `main.py` using the `boontk` trainer with 1 `num_epoch` to evaluate TCT while using the `ccvr` trainer with 1 `num_epoch` to evaluate CCVR. For the TCT experiments (TCT_x), you must update `boontk.py` to align with the multiplier $x$. Specifically, initialize the linear head as `theta_global = torch.zeros($512 \times x$, 200).cuda()` and set the `subsample_size` to $512 \times x$ in compute_eNTK function.
+Run `main.py` using the `boontk` trainer with 1 `num_epoch` to evaluate TCT while using the `ccvr` trainer with 1 `num_epoch` to evaluate CCVR. For the TCT experiments (TCT_x), you must update `boontk.py` to align with the multiplier $x$. Specifically, initialize the linear head as `theta_global = torch.zeros(512*x, 200).cuda()` and set the `subsample_size` to $512 \times x$ in compute_eNTK function.
 
 ## Figure 4
 
