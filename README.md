@@ -88,7 +88,7 @@ Run `main.py` using the `fedavg5` trainer for 600 `num_round` to evaluate the im
 
 In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH.
 
-Run `main.py` using the `fedavg5` trainer for 550 `num_round` to evaluate the impact of local epochs in Stage 2. Inside ```src/models/worker.py``` (Class LrdWorker), set the conditional statement to ```if round_i < 450:``` and change the Stage 2 loop  ```for i in range(self.num_epoch):``` to ```for i in range(1):``` to obtain the local epcho $\tau = 1$. Similarly, you can obtain the results for $\tau=5$ and $\tau=50$ by adjusting the range value accordingly.
+Run `main.py` using the `fedavg5` trainer for 550 `num_round` to evaluate the impact of local epochs in Stage 2. Inside ```src/models/worker.py``` (Class LrdWorker), set the conditional statement to ```if round_i < 450:``` and change the Stage 2 loop  ```for i in range(self.num_epoch):``` to ```for i in range(1):``` to obtain the 1 local epoch. Similarly, you can obtain the results for 5 and 50 local epoch by adjusting the range value accordingly.
 
 
 ## Dependency
