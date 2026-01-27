@@ -73,42 +73,42 @@ class CCVRTrainer(BaseTrainer):
         self.ccvr_tukey_beta = 0.5
 
     def train(self):
-        # print('>>> Select {} clients per round \n'.format(self.clients_per_round))
-        # # Fetch latest flat model parameter
-        # self.latest_model = self.worker.get_flat_model_params().detach()
-        # for round_i in range(self.num_round):
-        #     if round_i<=450:
-        #         # Test latest model on train data
-        #         # _, accuracy, loss = self.test_latest_model_on_traindata(round_i)
-        #         # self.acc_list_train.append(accuracy)
-        #         # self.loss_list_train.append(loss)
-        #         loss_test, accuracy_test = self.test_latest_model_on_evaldata(round_i)
-        #         self.acc_list_test.append(accuracy_test)
-        #         self.loss_list_test.append(loss_test)
-        #
-        #         # Choose K clients prop to data size
-        #         selected_clients = self.select_clients(seed=round_i)
-        #
-        #         # Solve minimization locally
-        #         solns, stats = self.local_train(round_i, selected_clients)
-        #
-        #         # Track communication cost
-        #         self.metrics.extend_commu_stats(round_i, stats)
-        #
-        #         # Update latest model
-        #         self.latest_model = self.aggregate(solns)
-        #
-        #         self.worker.set_flat_model_params(self.latest_model)
-        #
-        #
-        # # Test final model on train data
-        # # _, accuracy, loss = self.test_latest_model_on_traindata(self.num_round)
-        # # self.acc_list_train.append(accuracy)
-        # # self.loss_list_train.append(loss)
-        # loss_test, accuracy_test = self.test_latest_model_on_evaldata(self.num_round)
-        # self.acc_list_test.append(accuracy_test)
-        # self.loss_list_test.append(loss_test)
-        # torch.save(self.clients[0].worker.model.state_dict(), "ccvr_stage1_resnet18_cifar100_0.1.pth")
+        print('>>> Select {} clients per round \n'.format(self.clients_per_round))
+        # Fetch latest flat model parameter
+        self.latest_model = self.worker.get_flat_model_params().detach()
+        for round_i in range(self.num_round):
+            if round_i<=450:
+                # Test latest model on train data
+                # _, accuracy, loss = self.test_latest_model_on_traindata(round_i)
+                # self.acc_list_train.append(accuracy)
+                # self.loss_list_train.append(loss)
+                loss_test, accuracy_test = self.test_latest_model_on_evaldata(round_i)
+                self.acc_list_test.append(accuracy_test)
+                self.loss_list_test.append(loss_test)
+        
+                # Choose K clients prop to data size
+                selected_clients = self.select_clients(seed=round_i)
+        
+                # Solve minimization locally
+                solns, stats = self.local_train(round_i, selected_clients)
+        
+                # Track communication cost
+                self.metrics.extend_commu_stats(round_i, stats)
+        
+                # Update latest model
+                self.latest_model = self.aggregate(solns)
+        
+                self.worker.set_flat_model_params(self.latest_model)
+        
+        
+        # Test final model on train data
+        # _, accuracy, loss = self.test_latest_model_on_traindata(self.num_round)
+        # self.acc_list_train.append(accuracy)
+        # self.loss_list_train.append(loss)
+        loss_test, accuracy_test = self.test_latest_model_on_evaldata(self.num_round)
+        self.acc_list_test.append(accuracy_test)
+        self.loss_list_test.append(loss_test)
+        torch.save(self.clients[0].worker.model.state_dict(), "stage1_resnet18_tinyimagenet_0.1.pth")
 
         # ---------------- CCVR server-side calibration ----------------
         print('===================== Start CCVR Calibration (Server) =====================')
@@ -411,3 +411,4 @@ class CCVRTrainer(BaseTrainer):
         averaged_solution /= accum_sample_num
 
         return averaged_solution.detach()
+
