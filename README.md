@@ -58,35 +58,35 @@ Run `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obt
 
  ## Table 1 and Figure 1
 
- In this experiment, we do not use the Batch Normalization Adaptation skill and set ```model.eval()``` in Stage 2 of FedFRTH.
+ In this experiment, we do not use the Batch Normalization Adaptation skill and set ```model.eval()``` in Stage 2 of FedForth.
 
- Run `main.py` using the `fedavg5` trainer for 550 `num_round` to evaluate FedAvg and our FedFRTH algorithm. You can switch between algorithms by modifying the conditional statement in the LrdWorker class (src/models/worker.py): use ```if round_i < 550:``` for FedAvg and ```if round_i < 450:``` for FedFRTH.
+ Run `main.py` using the `fedavg5` trainer for 550 `num_round` to evaluate FedAvg and our FedForth algorithm. You can switch between algorithms by modifying the conditional statement in the LrdWorker class (src/models/worker.py): use ```if round_i < 550:``` for FedAvg and ```if round_i < 450:``` for FedForth.
 
- Run `main.py` using the `fedavg6` trainer for 550 `num_round` to evaluate FedProx and our FedFRTH algorithm. You can switch between algorithms by modifying the conditional statement in the ProxWorker class (src/models/worker.py): use ```if round_i < 550:``` for FedProx and ```if round_i < 450:``` for FedFRTH.
+ Run `main.py` using the `fedavg6` trainer for 550 `num_round` to evaluate FedProx and our FedForth algorithm. You can switch between algorithms by modifying the conditional statement in the ProxWorker class (src/models/worker.py): use ```if round_i < 550:``` for FedProx and ```if round_i < 450:``` for FedForth.
 
- Run `main.py` using the `scaffold` trainer for 550 `num_round` to evaluate SCAFFOLD and our FedFRTH algorithm. You can switch between algorithms by modifying the conditional statement in the ScaffoldWorker class (src/models/worker.py): use ```if round_i < 550:``` for SCAFFOLD and ```if round_i < 450:``` for FedFRTH.
+ Run `main.py` using the `scaffold` trainer for 550 `num_round` to evaluate SCAFFOLD and our FedForth algorithm. You can switch between algorithms by modifying the conditional statement in the ScaffoldWorker class (src/models/worker.py): use ```if round_i < 550:``` for SCAFFOLD and ```if round_i < 450:``` for FedForth.
 
  ## Figure 2
 
-In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH.
+In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedForth.
 
 Run `main.py` using the `feduv` trainer for 500 `num_round` with `resnet_uv` model to evaluate FedUV while using the `fedetf` trainer for 500 `num_round` with `resnet_etf` model to evaluate FedETF.
 
 ## Figure 3
 
-In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH, TCT and CCVR.
+In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedForth, TCT and CCVR.
 
 Run `main.py` using the `boontk` trainer with 1 `num_epoch` to evaluate TCT while using the `ccvr` trainer with 1 `num_epoch` to evaluate CCVR. For the TCT experiments (TCT_x), you must update `boontk.py` to align with the multiplier $x$. Specifically, initialize the linear head as `theta_global = torch.zeros(512*x, 200).cuda()` and set the `subsample_size` to $512 \times x$ in compute_eNTK function.
 
 ## Figure 4
 
-In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH.
+In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedForth.
 
 Run `main.py` using the `fedavg5` trainer for 600 `num_round` to evaluate the impact of Stage 1 length. Adjust the conditional statement ```if round_i < a:``` inside ```src/models/worker.py``` (Class LrdWorker) to set the specific number of rounds for Stage 1 (e.g., a=50)
 
 ## Figure 5
 
-In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH.
+In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedForth.
 
 Run `main.py` using the `fedavg5` trainer for 550 `num_round` to evaluate the impact of local epochs in Stage 2. Inside ```src/models/worker.py``` (Class LrdWorker), set the conditional statement to ```if round_i < 450:``` and change the Stage 2 loop  ```for i in range(self.num_epoch):``` to ```for i in range(1):``` to obtain the 1 local epoch. Similarly, you can obtain the results for 5 and 50 local epoch by adjusting the range value accordingly.
 
