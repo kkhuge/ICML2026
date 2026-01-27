@@ -70,7 +70,7 @@ Run `generate_dirichlet_niid_0.1.py` and `generate_dirichlet_niid_0.5.py` to obt
 
 In this experiment, we use the Batch Normalization Adaptation skill and do not set ```model.eval()``` in Stage 2 of FedFRTH.
 
-Run `main.py` using the `feduv` trainer for 500 `num_round` to evaluate FedUV while using the `fedetf` trainer for 500 `num_round` to evaluate FedETF.
+Run `main.py` using the `feduv` trainer for 500 `num_round` with `resnet_uv` model to evaluate FedUV while using the `fedetf` trainer for 500 `num_round` with `resnet_etf` model to evaluate FedETF.
 
 ## Figure 3
 
