@@ -91,7 +91,7 @@ def read_options():
     parser.add_argument('--another dataset',
                         help='name of another dataset;',
                         type=str,
-                        default='mnist_all_data_1_random_iid')  # mnist_all_data_1_random_niid,cifar10_all_data_1_random_iid, synthetic_alpha1_beta1_niid.pkl
+                        default='cifar10_all_data_1_random_iid')
     parser.add_argument('--dis',
                         help='add more information;',
                         type=str,
