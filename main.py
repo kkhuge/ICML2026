@@ -26,7 +26,7 @@ def read_options():
     parser.add_argument('--dataset',
                         help='name of dataset;',
                         type=str,
-                        default='tinyimagenet_niid_0.1')
+                        default='cifar10_all_data_1_random_iid')
     # cifar10_all_data_1_pathological_partition_niid_5_class; tinyimagenet_niid_0.1;cifar100_all_data_1_dirichlet_niid_0.1
     parser.add_argument('--model',
                         help='name of model;',
@@ -55,7 +55,7 @@ def read_options():
     parser.add_argument('--num_round',
                         help='number of rounds to simulate;',
                         type=int,
-                        default=600) # 100,500,550
+                        default=500)
     parser.add_argument('--eval_every',
                         help='evaluate every ____ rounds;',
                         type=int,
